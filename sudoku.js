@@ -87,9 +87,36 @@ var SetNum = function(Row,Col,Num){ //Num is real num miners one,ps this three v
 
 }
 
-var IndexToXY = function(Index){  //to change index (0-80) into xy format (0-9)
+var GetIndexFromXY = function(Index){  //to change index (0-80) into xy format (0-9)
 	
 	var xPos = Math.floor(Index/9);
 	var yPos = Index%9;
+	return xPos+yPos+"";
 	
+}
+
+var FindMinCell = function(){
+	var Counter = 0;
+	var CurrentIndex = 0;
+	var MinCellIndex = -1;
+	var MinCount = 100;
+	
+	do{
+		if( _NUM[CurrentIndex]>0 ){
+			Counter = Get1Count(CurrentIndex);
+			
+			if( Counter==1 ) {  //if the possible num just one,it mEANs it can be inserted ,then set it ,then back to the first cell cuz the possible num of one cell could change after set one another cell
+				if( SetNum(CurrentIndex,_NUM[CurrentIndex]) == false ){return -2}
+				CurrentIndex=-1;  
+			}
+			else if( Counter<MinCount ){
+				MinCount = Counter;
+				MinCellIndex = CurrentIndex;
+			}
+			
+		}
+		
+		CurrentIndex++;
+	}while(CurrentIndex<80)
+	return MinCellIndex;
 }
