@@ -22,16 +22,10 @@ V（0）=0000000012=1 V（1）=0000000102=2 V（2）=0000001002=4 V（3）=00000
 		_NUM[i] = _V[9];
 	}
 	console.log('Setting Num...');
-	SetLine(1, 0, 6, 0, 5, 9, 3, 0, 0, 0); 
-	SetLine(2, 9, 0, 1, 0, 0, 0, 5, 0, 0); 
-	SetLine(3, 0, 3, 0, 4, 0, 0, 0, 9, 0);
-	SetLine(4, 1, 0, 8, 0, 2, 0, 0, 0, 4); 
-	SetLine(5, 4, 0, 0, 3, 0, 9, 0, 0, 1); 
-	SetLine(6, 2, 0, 0, 0, 1, 0, 6, 0, 9); 
-	SetLine(7, 0, 8, 0, 0, 0, 6, 0, 2, 0); 
-	SetLine(8, 0, 0, 4, 0, 0, 0, 8, 0, 7); 
-	SetLine(9, 0, 0, 0, 7, 8, 5, 0, 1, 0); 
-	console.log('Calculating...');
+	SetLine(7,[0,1,2,3,4,5,6,7,8]); 
+
+ 
+	//console.log('Calculating...');
 	//Calculate();
 }
 
@@ -99,24 +93,32 @@ var RemoveNum = function(Index,Num){
 var SetNum = function(Index,Num){ //Num is real num miners one,ps this three varialbes all begin from 0,which is only used in internal function
 
 	var Row = GetRow(Index);
-	var Col = GetCol(Index);	
+	var Col = GetCol(Index);
+	console.log('test0');	
 	if(( _V[Num] & _NUM[Index] ) == 0) //check if the target num already cannot be chosen
 		return false;
-	_NUM[Row*9+Col] = -(Num);
+	_NUM[Row*9+Col] = -(Num+1);
 	
 	//Num = _V[9]-_V[Num];    //this row should be added in original version from web ,because reverse num has already generated before call remove function
-	
+	console.log('test');
 	for(var i=0; i<9; i++){ //remove the target num in each row and column
 		if( RemoveNum(i*9+Col,Num) == 0 ) return false;
-		if( RemoveNum(Row*9+i,Num) == 0 )	return false;
+		console.log('RemoveCol'+ Col +Row);
+		if( RemoveNum(Row*9+i,Num) == 0 ) return false;
+		console.log('RemoveRow'+ Row);
 	}
-	
+		
 	var Grid_Row = Math.floor( (Row)/3 ) * 3; //Grid row is absolute-position row of the 1st one cell of grid
 	var Grid_Col = Math.floor( (Col)/3 ) * 3;
 	var Grid_Ini_Index = Grid_Row * 9 + Grid_Col;
 	
-	for(var i=Grid_Ini_Index; i<Grid_Ini_Index+9 ; i++){  
-			if( RemoveNum(i,Num) == 0) return false;
+	for(var i=0; i<9 ; i++){  
+		console.log('RemoveGrid');
+			if( RemoveNum(Grid_Ini_Index,Num) == 0) return false;
+			console.log('Grid_Ini_Index:::::'+ i);
+			
+		Grid_Ini_Index++;
+		if(i==2 || i==5) Grid_Ini_Index+=6;
 	}
 
 }
