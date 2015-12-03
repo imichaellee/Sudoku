@@ -26,7 +26,7 @@ V（0）=0000000012=1 V（1）=0000000102=2 V（2）=0000001002=4 V（3）=00000
 
  
 	//console.log('Calculating...');
-	//Calculate();
+	Calculate();
 }
 
 var OutputTest = function(){
@@ -117,10 +117,9 @@ var SetNum = function(Index,Num){ //Num is real num miners one,ps this three var
 			if( RemoveNum(Grid_Ini_Index,Num) == 0) return false;
 			console.log('Grid_Ini_Index:::::'+ i);
 			
-		Grid_Ini_Index++;
-		if(i==2 || i==5) Grid_Ini_Index+=6;
+		Grid_Ini_Index+=1;  //the core of position change in one grid
+		if(i==2 || i==5) {Grid_Ini_Index+=6;}
 	}
-
 }
 
 var SetLine = function(_Row,_RowSet){
@@ -133,8 +132,6 @@ var SetLine = function(_Row,_RowSet){
 	for(var i=Row*9; i<Row*9+9; i++){
 		SetNum(i,RowSet[i%9]);
 	}
-
-
 }
 
 var Calculate = function(){
