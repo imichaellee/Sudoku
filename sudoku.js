@@ -1,44 +1,44 @@
-var _NUM = new Array;
-var _V = new Array;
+	
+
+	var _NUM = new Array;
+	var _V = new Array;
 
 
-var initSudoku = function(){
-	
-	
+var InitSudoku = function(){
+
 	/*----
 	
-V（0）=0000000012=1
-
-V（1）=0000000102=2
-
-V（2）=0000001002=4
-
-V（3）=0000010002=8
-
-V（4）=0000100002=16
-
-V（5）=0001000002=32
-
-V（6）=0010000002=64
-
-V（7）=0100000002=128
-
-V（8）=1000000002=256
-
-V（9）=1111111112=511
+V（0）=0000000012=1 V（1）=0000000102=2 V（2）=0000001002=4 V（3）=0000010002=8 V（4）=0000100002=16 V（5）=0001000002=32 V（6）=0010000002=64
 	
 	----*/
-	
+	console.log('Initiating...');
 	_V[0]=1;
 	for(var i=1; i<9; i++){
 		_V[i] = _V[i-1]*2;
 	}
 	_V[9]=511;
 	
-	for(var i=0; i<80; i++){
-		_NUM = _V[9];
+	for(var i=0; i<81; i++){
+		_NUM[i] = _V[9];
 	}
-	
+	console.log('Setting Num...');
+	SetLine(1, 0, 6, 0, 5, 9, 3, 0, 0, 0); 
+	SetLine(2, 9, 0, 1, 0, 0, 0, 5, 0, 0); 
+	SetLine(3, 0, 3, 0, 4, 0, 0, 0, 9, 0);
+	SetLine(4, 1, 0, 8, 0, 2, 0, 0, 0, 4); 
+	SetLine(5, 4, 0, 0, 3, 0, 9, 0, 0, 1); 
+	SetLine(6, 2, 0, 0, 0, 1, 0, 6, 0, 9); 
+	SetLine(7, 0, 8, 0, 0, 0, 6, 0, 2, 0); 
+	SetLine(8, 0, 0, 4, 0, 0, 0, 8, 0, 7); 
+	SetLine(9, 0, 0, 0, 7, 8, 5, 0, 1, 0); 
+	console.log('Calculating...');
+	//Calculate();
+}
+
+var OutputTest = function(){
+	for(var i=0; i<81; i++){
+		console.log("#"+_NUM[i]);
+	}
 }
 
 var Get1Count = function(Value){
@@ -52,71 +52,209 @@ var Get1Count = function(Value){
 	return counter;
 }
 
-var RemoveNum = function(Row,Col,Num){
-	var Index = Row*9+Col;
-	var NumReverse = _V[9]-Num;
+
+var GetRow = function(Index){  //to change index (0-80) into xy format (0-9)	
+	return Math.floor(Index/9);
+}
+
+var GetCol = function(Index){  //to change index (0-80) into xy format (0-9)
+	return Index%9;
+}
+
+var GetIndexOfNum = function(Num,Index){ //Num here is 10101001..
+	var Counter = 0;
+	for(var i=0; i<9; i++){
+		if( (_V[i] & Num)!=0) {
+			Counter+=1;
+			if( Counter == Index ) return i;
+		}
+	}
+}
+
+
+var RestoreNum = function(L){
+	var Ltemp = new Array();
+	Ltemp = L;
+	for(var i=0; i<81; i++){
+		_NUM[i] = Ltemp[i];
+	}
+	
+}
+
+
+var RemoveNum = function(Index,Num){
+	//var Index = Row*9+Col;
+	
+	var NumReverse = _V[9]-_V[Num];
 	if(_NUM[Index]>0)
 	{
-		_NUM[Index] = _NUM[Index] & NumReverse;
+		_NUM[Index] = _NUM[Index] & NumReverse; 
 	}
+
 	return _NUM[Index];
 }
 
-var SetNum = function(Row,Col,Num){ //Num is real num miners one,ps this three varialbes all begin from 0,which is only used in internal function
 
-	var Index = Row*9+Col;
+
+var SetNum = function(Index,Num){ //Num is real num miners one,ps this three varialbes all begin from 0,which is only used in internal function
+
+	var Row = GetRow(Index);
+	var Col = GetCol(Index);	
 	if(( _V[Num] & _NUM[Index] ) == 0) //check if the target num already cannot be chosen
 		return false;
-	_NUM[Row*9+Col] = -(Num+1);
+	_NUM[Row*9+Col] = -(Num);
 	
 	//Num = _V[9]-_V[Num];    //this row should be added in original version from web ,because reverse num has already generated before call remove function
 	
 	for(var i=0; i<9; i++){ //remove the target num in each row and column
-		if( RemoveNum(i,Col,Num) == 0 ) return false;
-		if( RemoveNum(Row,i,Num) == 0 )	return false;
+		if( RemoveNum(i*9+Col,Num) == 0 ) return false;
+		if( RemoveNum(Row*9+i,Num) == 0 )	return false;
 	}
 	
-	var Grid_X = Math.floor( (Row)/3 ) * 3; //remove the target num in every grid
-	var Grid_Y = Math.floor( (Col)/3 ) * 3;
-	
-	for(var i=Grid_X; i<Grid_X+3 ; i++){  
-		for(var j=Grid_Y; j<Grid_Y+3; j++){
+	var Grid_Row = Math.floor( (Row)/3 ) * 3; //Grid row is absolute-position row of the 1st one cell of grid
+	var Grid_Col = Math.floor( (Col)/3 ) * 3;
+	var Grid_Ini_Index = Grid_Row * 9 + Grid_Col;
+	for(var i=Grid_Row; i<Grid_Row+3 ; i++){  
+		for(var j=Grid_Col; j<Grid_Col+3; j++){
 			if( RemoveNum(i,j,Num) == 0) return false;
 		}
 	}
 
 }
 
-var GetIndexFromXY = function(Index){  //to change index (0-80) into xy format (0-9)
-	
-	var xPos = Math.floor(Index/9);
-	var yPos = Index%9;
-	return xPos+yPos+"";
-	
+var SetLine = function(_Row,_RowSet){
+	var RowSet = new Array();
+	var Row = 0;
+	Row = _Row;
+	RowSet = _RowSet;
+	if(RowSet.length == 0){return false;}
+
+	for(var i=Row*9; i<Row*9+9; i++){
+		SetNum(i,RowSet[i%9]);
+	}
+
+
 }
 
-var FindMinCell = function(){
+var Calculate = function(){
+	
+	var Index_Fish = 0;
+	var Index_MinCell = -1;
+	var Q = new Array();
+	var L = new Array();
+	Index_MinCell =  FindMinCell();
+	
+	do {
+		if ( Index_MinCell == -2 ){
+			if(Q.length == 0) {
+				console.log('error! No cache!');
+				return false;
+			}
+			
+			L = Q.pop;
+			
+			Index_Fish = L[82] + 1;
+			L.splice(82,1);
+			
+			Index_MinCell = L[81];
+			L.splice(81,1);
+					
+			console.log('Stack Pop'+Q.length);
+
+			RestoreNum(L);
+			
+			Index_MinCell = TryNextFish(Q,L,Index_MinCell,Index_Fish);
+			
+		}
+		else{
+			L = new Array();
+			L = _NUM;
+			Index_MinCell = TryNextFish(Q,L,Index_MinCell,0);
+		}
+	} while ( Index_MinCell != -1 );
+	
+	console.log('calculate complete!');
+
+	var Solution = new Array();
+	for(var i=0; i<81; i++){
+		Solution[i] = -_NUM[i];
+		console.log(Solution[i]);
+	}
+	
+	//return Solution;
+}
+
+var FindMinCell = function(){  //the _NUM :one kind is 000010101,000000001 second is 00000000, third is -8
 	var Counter = 0;
-	var CurrentIndex = 0;
-	var MinCellIndex = -1;
+	var Index_Current = 0;
+	var Index_MinCell = -1;
 	var MinCount = 100;
 	
 	do{
-		if( _NUM[CurrentIndex]>0 ){
-			Counter = Get1Count(CurrentIndex);
+		if( _NUM[Index_Current]>0 ){
+			Counter = Get1Count(_NUM[Index_Current]);
 			
 			if( Counter==1 ) {  //if the possible num just one,it mEANs it can be inserted ,then set it ,then back to the first cell cuz the possible num of one cell could change after set one another cell
-				if( SetNum(CurrentIndex,_NUM[CurrentIndex]) == false ){return -2}
-				CurrentIndex=-1;  
+				if( SetNum(Index_Current,_NUM[Index_Current]) == false ){return -2;}
+				Index_Current=-1;  
+				
+				if( Index_Current==Index_MinCell){ //reset the setting after solve one single cell
+					Index_MinCell=-1;
+					MinCount = 100;
+				}
 			}
 			else if( Counter<MinCount ){
 				MinCount = Counter;
-				MinCellIndex = CurrentIndex;
+				Index_MinCell = Index_Current;
 			}
 			
+		}	
+		Index_Current++;
+	}while( Index_Current<80 )
+	return Index_MinCell;
+}
+
+
+var TryNextFish = function(Q,L,Index_MinCell,NextFish){
+	
+	var Qtemp = new Array();
+	var Ltemp = new Array();
+		Qtemp = Q;
+		Ltemp = L;
+	
+	var NextTry = GetIndexOfNum(_NUM[Index_MinCell],NextFish);
+	do {
+		if( SetNum(Index_MinCell,_V[NextTry]) == true){
+			console.log('Stack push!');
+			Ltemp.push(NextFish);
+			Ltemp.push(Index_MinCell);
+			Qtemp.push(L);
+			Index_MinCell = FindMinCell();
 		}
-		
-		CurrentIndex++;
-	}while(CurrentIndex<80)
-	return MinCellIndex;
+		else{
+		RestoreNum(L);
+		NextFish+=1;
+		NextTry = GetIndexOfNum(_NUM[Index_MinCell],NextFish);
+		}
+	} while (NextTry != -1 );
+	
+	if( NextTry == -1 ){
+		Index_MinCell = -2;
+	}
+	
+	return Index_MinCell;
+	
+}
+
+
+var GetNumString = function(Num){
+	if(Num<0) return "#"+Num;
+	var S = new Array();
+	var NumTemp = 0;
+	for(var i=0; i<9; i++){
+		if(_V[i] & Num != 0){
+			S.push(i);
+		}
+	}
+	return S;
 }
