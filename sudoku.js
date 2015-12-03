@@ -114,10 +114,9 @@ var SetNum = function(Index,Num){ //Num is real num miners one,ps this three var
 	var Grid_Row = Math.floor( (Row)/3 ) * 3; //Grid row is absolute-position row of the 1st one cell of grid
 	var Grid_Col = Math.floor( (Col)/3 ) * 3;
 	var Grid_Ini_Index = Grid_Row * 9 + Grid_Col;
-	for(var i=Grid_Row; i<Grid_Row+3 ; i++){  
-		for(var j=Grid_Col; j<Grid_Col+3; j++){
-			if( RemoveNum(i,j,Num) == 0) return false;
-		}
+	
+	for(var i=Grid_Ini_Index; i<Grid_Ini_Index+9 ; i++){  
+			if( RemoveNum(i,Num) == 0) return false;
 	}
 
 }
