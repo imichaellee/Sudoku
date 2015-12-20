@@ -6,8 +6,12 @@
 	var StackOfMinCell = new Array();
 
 var InitSudoku = function(){
+
+	/*----
 	
-	/*V（0）=0000000012=1 V（1）=0000000102=2 V（2）=0000001002=4*/
+V（0）=0000000012=1 V（1）=0000000102=2 V（2）=0000001002=4 V（3）=0000010002=8 V（4）=0000100002=16 V（5）=0001000002=32 V（6）=0010000002=64
+	
+	----*/
 	console.log('Initiating...');
 	_V[0]=1;
 	for(var i=1; i<9; i++){
@@ -19,7 +23,7 @@ var InitSudoku = function(){
 		_NUM[i] = _V[9];
 	}
 	console.log('Setting Num...');
-	SetLine(7,[0,1,6, ,4,5,,7,8]); 
+	SetLine(7,[0,1,2,3,4,5,6,7,8]); 
 
  
 	//console.log('Calculating...');
@@ -180,8 +184,7 @@ var Calculate = function(){
 	var Solution = new Array();
 	for(var i=0; i<81; i++){
 		Solution[i] = -_NUM[i];
-		if(i%9==0) document.write("</br></br>");
-		document.write("&nbsp&nbsp&nbsp&nbsp&nbsp*"+Solution[i]);
+		console.log(Solution[i]);
 	}
 	console.log('Calculation Complete!');
 	//return Solution;
@@ -266,3 +269,14 @@ var TryNextFish = function(Index_MinCell,NextFish){
 }
 
 
+var GetNumString = function(Num){
+	if(Num<0) return "#"+Num;
+	var S = new Array();
+	var NumTemp = 0;
+	for(var i=0; i<9; i++){
+		if((_V[i] & Num) != 0){
+			S.push(i);
+		}
+	}
+	return S;
+}
