@@ -100,7 +100,9 @@ var SetNum = function(Index,Num){ //Num is real num miners one,ps this three var
 	var Row = GetRow(Index);
 	var Col = GetCol(Index);
 	
-	if(( _V[Num] & _NUM[Index] ) == 0) //check if the target num already cannot be chosen
+  
+    
+	if(( _V[Num] & _NUM[Index])  == 0 ) //check if the target num already cannot be chosen
 		return false;
 	_NUM[Row*9+Col] = -(Num+1);
 	
@@ -183,11 +185,13 @@ var Calculate = function(){
 	}
 		//	StackOfNum=_NUM;  //record before setting
 			//console.log('.....record before setting........Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length+'_NUM:'+_NUM.length);
-			console.log(Index_MinCell+"***secondLOOP**");
-            Index_MinCell = TryNextFish(Index_MinCell,1);
-            //OutputTest();
+			console.log(Index_MinCell+"***beforeLOOP**");
+           // OutputTest();
+                Index_MinCell = TryNextFish(Index_MinCell,1);
+            console.log(Index_MinCell+"***afterLOOP**");
+          //  OutputTest();
 		}
-        console.log(Index_MinCell+"***after**");
+        //console.log(Index_MinCell+"***after**");
 		//OutputTest();
     } while ( Index_MinCell != -1 );
 	
@@ -231,7 +235,7 @@ var FindMinCell = function(){  //the _NUM :one kind is 000010101,000000001 secon
 		Index_Current++;
 		//console.log('FindCell ：：'+Index_Current);
 	}while( Index_Current<81 )
-	console.log('FindMinCell Complete! isssssss'+Index_MinCell);
+	//console.log('FindMinCell Complete! isssssss'+Index_MinCell);
 	return Index_MinCell;
 	
 }
@@ -244,11 +248,18 @@ var TryNextFish = function(Index_MinCell,NextFish){
 	var NextTry = GetIndexOfNum(_NUM[Index_MinCell],NextFish);  //try other num start from 1
 	//console.log('NextTry:'+NextTry+'----Index_MinCell'+Index_MinCell+'----NextFish:'+NextFish);
 	//console.log('What?!Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
+   OutputTest();
+    console.log(Index_MinCell+"***beforeTRY**"+NextTry);
+    if( _NUM[Index_MinCell]<0 )
+    return -1;
 	do {      //try fishlist in prepared mincell
 		if( SetNum(Index_MinCell,NextTry) == true){
+            
+            OutputTest();
+            console.log(Index_MinCell+"***afterTRy**"+NextTry);
 			//console.log('Stack Push!');
 			//console.log('RightFish............Next fish!'+ NextFish + 'NextTry' + NextTry +'Index_MinCell'+Index_MinCell);
-					console.log('*********Trying........Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length+'_NUM:'+_NUM.length);
+					//console.log('*********Trying........Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length+'_NUM:'+_NUM.length);
 			StackOfNum.push(Index_MinCell);  //record the mincell and the index of maybe-ok fish to the last positon of Ltemp
 			StackOfNum.push(NextFish);
 			
@@ -256,7 +267,7 @@ var TryNextFish = function(Index_MinCell,NextFish){
 			//console.log(Ltemp.pop()+"**");
 			//}
 			StackOfMinCell.push(StackOfNum);
-						console.log('******************...Tried........Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length+'_NUM:'+_NUM.length);
+						//console.log('******************...Tried........Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length+'_NUM:'+_NUM.length);
 			Index_MinCell = FindMinCell();
 			return Index_MinCell;
 		}

@@ -20,7 +20,9 @@ var initSudokuBody = function(){
     
     for(var i=0; i<81; i++){  //initial sudoku Son
         $('<input>',{id:"sudokuSon"+i}).addClass('sudokuSon').appendTo($('#sudokuBody'));
+        
     }
+    
     
     
    InitSudoku();
@@ -52,11 +54,4 @@ var showResult = function(){
    
 }
 
-var getWindowResolution = function(){
-    
-}
-
-var getDocumentResolution = function(){
-    
-}
 
