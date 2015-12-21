@@ -1,4 +1,5 @@
 var initSudokuBody = function(){
+   
     
     $("#sudokuBody").css(
         {
@@ -17,28 +18,39 @@ var initSudokuBody = function(){
         ); 
 
     
-    for(var i=0; i<81; i++){
+    for(var i=0; i<81; i++){  //initial sudoku Son
         $('<input>',{id:"sudokuSon"+i}).addClass('sudokuSon').appendTo($('#sudokuBody'));
-        
-        if(i%9===4)
-            setValue(i,i+1);
     }
     
     
-  
-    
+   InitSudoku();
+   showResult(); 
     
    }
    
    
    
    
-var setValue=function(index,value){
+var setValue=function(index,value){ //virtually set the value
       $("#sudokuSon"+index).val(value);
       $("#sudokuSon"+index).attr('disabled',true)
       
 }
 
+
+var showResult = function(){
+    var Solution = new Array();
+	for(var i=0; i<81; i++){
+        //if(_NUM[i]>0){Solution[i] = "";}  
+        //else{Solution[i] = -_NUM[i];}
+		  Solution[i] = -_NUM[i];
+            
+            setValue(i,Solution[i]);
+		//if(i%9==0) document.write("</br></br>");
+		//document.write("&nbsp&nbsp&nbsp&nbsp&nbsp*"+Solution[i]);
+	}
+   
+}
 
 var getWindowResolution = function(){
     

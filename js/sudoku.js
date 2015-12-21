@@ -19,10 +19,16 @@ var InitSudoku = function(){
 		_NUM[i] = _V[9];
 	}
 	console.log('Setting Num...');
-	SetLine(7,[0,1,6, ,4,5,,7,8]); 
+	SetLine(0,[7, , , , , , , , ]);
+    SetLine(1,[ , ,2,5, , , , , ]); 
+    SetLine(2,[ ,6, , ,8, , ,1, ]);  
+    SetLine(3,[ ,4, , , ,6, , , ]); 
+    SetLine(4,[ , , , ,3,4,6, , ]);
+    SetLine(5,[ , , ,0, , , ,2, ]);
+    SetLine(6,[ , ,0, , , , ,5,7]); 
+    SetLine(7,[ , ,7,4, , , ,0, ]);
+    SetLine(8,[ ,8, , , , ,3, , ]);
 
- 
-	//console.log('Calculating...');
 	Calculate();
 }
 
@@ -31,6 +37,7 @@ var OutputTest = function(){
 		if(i%9 == 0)
 		console.log(" #"+_NUM[i]+" #"+_NUM[i+1]+" #"+_NUM[i+2]+" #"+_NUM[i+3]+" #"+_NUM[i+4]+" #"+_NUM[i+5]+" #"+_NUM[i+6]+" #"+_NUM[i+7]+" #"+_NUM[i+8]);
 	}
+
 }
 
 var Get1Count = function(Value){
@@ -126,7 +133,10 @@ var SetLine = function(_Row,_RowSet){
 	if(RowSet.length == 0){return false;}
 
 	for(var i=Row*9; i<Row*9+9; i++){
-		SetNum(i,RowSet[i%9]);
+        SetNum(i,RowSet[i%9]);
+        if(RowSet[i%9]>=0 && RowSet[i%9]<=9)
+            $('#sudokuSon'+i).css("background-color","#6f6f6f");
+		
 	}
 }
 
@@ -137,16 +147,17 @@ var Calculate = function(){
 	Index_MinCell =  FindMinCell();
 	
 	do {
-		OutputTest();
+        console.log(Index_MinCell+"**start***");
+		//OutputTest();
 		if ( Index_MinCell == -2 ){
 			if(StackOfMinCell.length == 0) {
-				console.log('error! No cache!');
+				//console.log('error! No cache!');
 				return false;
 			}
-			console.log('....before..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
-			console.log('....Before VAR..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
+			//console.log('....before..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
+			//console.log('....Before VAR..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
 			StackOfNum = new Array();  //clear cache
-			console.log('....After VAR..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
+			//console.log('....After VAR..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
 			StackOfNum=StackOfMinCell.pop();  
 			
 			Index_Fish = StackOfNum[82] + 1;
@@ -154,38 +165,41 @@ var Calculate = function(){
 			
 			Index_MinCell = StackOfNum[81];
 			StackOfNum.splice(81,1);
-			console.log('.....after..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);		
+			//console.log('.....after..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);		
 			//console.log('Stack Pop'+StackOfMinCell.length);
 
 			if( RestoreNum()==-4 ) console.log('What?!!!!!!!!!!!!!!!!!!!!!!Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);    //restore according to the cache,here NUM array has been changed
 			
 			Index_MinCell = TryNextFish(Index_MinCell,Index_Fish);
-			
+            console.log(Index_MinCell+"***firsrLOOP**");
+			//OutputTest();
 		}
 		else{
-			console.log('....Before VAR..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
+			//console.log('....Before VAR..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
 			StackOfNum = new Array();  //clear cache
-			console.log('....After VAR..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
+			//console.log('....After VAR..Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length);
 	for(var i=0; i<81; i++){
 		StackOfNum[i]=_NUM[i];
 	}
 		//	StackOfNum=_NUM;  //record before setting
-			console.log('.....record before setting........Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length+'_NUM:'+_NUM.length);
-			Index_MinCell = TryNextFish(Index_MinCell,1);
+			//console.log('.....record before setting........Numstack:'+ StackOfNum.length +'mincelstack'+ StackOfMinCell.length+'_NUM:'+_NUM.length);
+			console.log(Index_MinCell+"***secondLOOP**");
+            Index_MinCell = TryNextFish(Index_MinCell,1);
+            //OutputTest();
 		}
-	} while ( Index_MinCell != -1 );
+        console.log(Index_MinCell+"***after**");
+		//OutputTest();
+    } while ( Index_MinCell != -1 );
 	
-	console.log('calculate complete!');
+	//console.log('calculate complete!');
 
-	var Solution = new Array();
-	for(var i=0; i<81; i++){
-		Solution[i] = -_NUM[i];
-		if(i%9==0) document.write("</br></br>");
-		document.write("&nbsp&nbsp&nbsp&nbsp&nbsp*"+Solution[i]);
-	}
-	console.log('Calculation Complete!');
+    //showResult(); 
+	//console.log('Calculation Complete!');
 	//return Solution;
 }
+
+
+
 
 var FindMinCell = function(){  //the _NUM :one kind is 000010101,000000001 second is 00000000, third is -8
 	var Counter = 0;
