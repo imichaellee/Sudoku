@@ -14,7 +14,7 @@ var initSudokuBody = function(){
             "height":"450px",
             "width":"450px",
         }
-        );
+        ); 
 
     
     for(var i=0; i<81; i++){
