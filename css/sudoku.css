@@ -4,8 +4,9 @@
             float: left;
              top : 0px;
              left : 0px;
+             margin: 1px;
              background-color: #4c4c4c ;
-             border : 1px solid #A0A0A0 ;
+             border : 0px solid #A0A0A0 ;
              height : 50px ;
              width : 50px ;
              font-family: Courier New, Courier, monospace;
@@ -14,8 +15,17 @@
              text-align: center;
              cursor: default;
              line-height: 0px;  /* the I symbol would disappear if this set to be infinite larger*/
+             transition: box-shadow .22s;
  }
  
+ .sudokuSon:hover{
+     box-shadow: 0 0 15px 2px dimgray;
+     background-color: #3c3c3c ;
+     transition: box-shadow .18s;
+ }
  
+ body{
+     background-color: #E0E0E0;
+ }
  
  
