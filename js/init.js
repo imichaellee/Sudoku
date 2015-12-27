@@ -19,16 +19,41 @@ var initSudokuBody = function(){
 
     
     for(var i=0; i<81; i++){  //initial sudoku Son
-        $('<input>',{id:"sudokuSon"+i}).addClass('sudokuSon').appendTo($('#sudokuBody'));
+        $('<input>',{id:"sudokuSon"+i,maxlength:"1",absoluteIndex:'s'+i}).addClass('sudokuSon').appendTo($('#sudokuBody'));
         if( (GetRow(i) == 2) || (GetRow(i) == 5))
             $('#sudokuSon'+i).css("border-bottom","0px solid #FFFFFF");
         if( (GetCol(i) == 2) || (GetCol(i) == 5))
             $('#sudokuSon'+i).css("border-right","0px solid #FFFFFF");
 
-        
+        $('#sudokuSon'+i).keydown(function(event){
+                
+                
+                if((event.which > 48 && event.which < 59) || (event.which > 96 && event.which < 105))
+                {
+                    var inputIs = event.which-48;
+                    console.log('inputIs:'+inputIs);
+                    
+                    var index = (this.id).substring(9);
+                     console.log('index:'+index);
+                    if(checkRowColGridUnique(inputIs,index))
+                        $('#isLegal').html('Perfect Try!'+inputIs);  //append is add after, html is likely replace
+                    else
+                        $('#isLegal').html('Good Try! But answer wrong!');     
+                }
+                else
+                {     
+                    $('#isLegal').html('illegal Press!'+event.which);     
+                }
+        });
+        $('#sudokuSon'+i).keyup(function(event){
+
+                    this.value=this.value.replace(/\D/g,'');
+                   
+             
+        });
     }
     
-    
+   
     
    InitSudoku();
    showResult(); 
@@ -58,5 +83,7 @@ var showResult = function(){
 	}
    
 }
+
+
 
 
