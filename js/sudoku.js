@@ -39,119 +39,8 @@ var OutputTest = function(){
 	}
 
 }
-var checkFinal = function(){
-    console.log('counter1111!');
-    var counter = 0;
-    var flag =true;
-   
-    for(var row_i=0; row_i<9; row_i++){
-         var ToBeTest = new Array;
-         
-       
-            //check each row
-            for(var row_i_each = row_i*9; row_i_each<row_i*9+9; row_i_each++){
-                ToBeTest[row_i_each%9] = -_NUM[row_i_each];
-                console.log('counterxxxxxxxxxxx!'+row_i_each%9+_NUM[row_i_each]);
-                }
-            
-    // should have been a distinguish function,but doesn work if transporting var needed In JS MAYBE {check each 1-9 funcion}
-              counter = 0;
-                for(var i=0;i<9;i++){
-                if(ToBeTest.indexOf(i+1)>=0){counter++;console.log('ToBeTest.indexOf(i+1)!'+ToBeTest.indexOf(i+1));}
-            }
-            if(counter == 9){ 
-                console.log('ToBeTest.indexOf(i+1)!'+ToBeTest.indexOf(i+1));
-                flag = true;
-            } 
-            else{
-                flag = false;
-                }
-     // should have been a distinguish function      
-        
-    }
-    
-    
-    
-        for(var col_i=0; col_i<9; col_i++){
-         var ColToBeTest = new Array;
-          var ColIndex = 0;
-            //check each col
-            for(var col_i_each = col_i; col_i_each<col_i+73; col_i_each+=9){
-               
-                ColToBeTest[ColIndex] = -_NUM[col_i_each];
-                ColIndex++;
-                }
-            
-    // should have been a distinguish function,but doesn work if transporting var needed In JS MAYBE {check each 1-9 funcion}
-              counter = 0;
-                for(var i=0;i<9;i++){
-                if(ColToBeTest.indexOf(i+1)>=0){counter++;}
-            }
-            if(counter == 9){ 
-                flag = true;
-            } 
-            else{
-                flag = false;
-                }
-       }
-                
-                
-        for(var grid_i=0; grid_i<9; grid_i++){
-         var GridToBeTest = new Array;
-          var GridIndex = 0;
-          var GridStart = 1;
-            //check each grid
-            
-               
-            if( (grid_i == 3) || (grid_i == 6) ){GridStart=4;}
-            else{GridStart = 1;}
-            
-            var grid_start_i_index = grid_i*3*GridStart;
-            for(var grid_i_each = grid_start_i_index; grid_i_each<grid_start_i_index+21; grid_i_each++){
-               
-                GridToBeTest[GridIndex] = -_NUM[grid_i_each];
-                GridIndex++;
-                if(grid_i_each - grid_start_i_index == 2 || grid_i_each - grid_start_i_index == 5){grid_i_each+=6;}
-                
-                }
-            
-    // should have been a distinguish function,but doesn work if transporting var needed In JS MAYBE {check each 1-9 funcion}
-              counter = 0;
-                for(var i=0;i<9;i++){
-                if(GridToBeTest.indexOf(i+1)>=0){counter++;}
-            }
-            if(counter == 9){ 
-                flag = true;
-            } 
-            else{
-                flag = false;
-                }                
-                
-                
-                
-                
-     // should have been a distinguish function      
-        
-    }
-    
-    return flag;
-    
-}
 
-var countCheck = function(test){ //check if one array contain 1-9 
-    var counter = 0;
-    var group = new Array;
-    group = test;
-    for(var i=0;i<9;i++){
-        if(group.indexOf(i+1)>0){counter++;}
-    }
-    if(counter == 9) 
-        return true;
-    else{
-        console.log('counter!'+counter);
-        return false;
-        }
-}
+
 
 var Get1Count = function(Value){
 	var counter = 0;
@@ -404,4 +293,124 @@ var TryNextFish = function(Index_MinCell,NextFish){
 	
 }
 
+var checkRowColGridUnique = function(test,index){ // check whether the input is unique in R C G  
+	 console.log("Same1");
+    var row_i = GetRow(index);
+	var col_i = GetCol(index);
+	var Grid_Row = Math.floor( (row_i)/3 ) * 3; //Grid row is absolute-position row of the 1st one cell of grid
+	var Grid_Col = Math.floor( (col_i)/3 ) * 3;
+	var grid_i = Grid_Row * 9 + Grid_Col;       
+    var flag = false;
+ 
+            for(var row_i_each = row_i*9; row_i_each<row_i*9+9; row_i_each++){ //different col in one row
+                if(test != -_NUM[row_i_each]){flag=true;console.log('Diff'+'with'+_NUM[row_i_each]);}
+                else{flag=false;console.log("Same1");return flag;}    
+            }      
+        
+        
 
+            for(var col_i_each = col_i; col_i_each<col_i+73; col_i_each+=9){ //different col in one row
+                if(test != -_NUM[col_i_each]){flag=true;console.log('Diff'+'with'+_NUM[col_i_each]);}
+                else{flag=false;console.log('Same2');return flag;}    
+            } 
+               
+            //check each grid        
+            
+            for(var grid_i_each = grid_i; grid_i_each<grid_i+21; grid_i_each++){ //different col in one row
+                if(test != -_NUM[grid_i_each]){flag=true;console.log('Diff'+'with'+_NUM[grid_i_each]);}
+                else{flag=false;console.log('Same3');return flag;}  
+                if(grid_i_each==(grid_i+2) || grid_i_each==(grid_i+5)){grid_i_each+=6;}  
+            } 
+                      
+        return flag;  
+}
+
+
+//checkfinal only can check each row and col and grid have contain the 1-9 not check the unique 
+var checkFinal = function(){  //(ONLY final check)check whether input is completely and indivually contain 1 to 9
+    //console.log('counter1111!');
+    var counter = 0;
+    var flag =true;
+   
+    for(var row_i=2; row_i<3; row_i++){
+         var ToBeTest = new Array;
+            //check each row
+            for(var row_i_each = row_i*9; row_i_each<row_i*9+9; row_i_each++){
+                ToBeTest[row_i_each%9] = -_NUM[row_i_each];
+                console.log('!!!done!!!ToBeTest'+row_i_each%9+'='+ToBeTest[row_i_each%9]);
+                //console.log('counterxxxxxxxxxxx!'+row_i_each%9+_NUM[row_i_each]);
+                }       
+    // should have been a distinguish function,but doesn work if transporting var needed In JS MAYBE {check each 1-9 funcion}
+              counter = 0;
+                for(var i=0;i<9;i++){
+                if(ToBeTest.indexOf(i+1)>=0){counter++;}
+            }
+            if(counter == 9){ 
+                //console.log('ToBeTest.indexOf(i+1)!'+ToBeTest.indexOf(i+1));
+                flag = true;
+            } 
+            else{
+                flag = false;
+                }
+     // should have been a distinguish function      
+        
+    }
+        for(var col_i=2; col_i<3; col_i++){
+         var ColToBeTest = new Array;
+          var ColIndex = 0;
+            //check each col
+            for(var col_i_each = col_i; col_i_each<col_i+73; col_i_each+=9){
+                ColToBeTest[ColIndex] = -_NUM[col_i_each];
+                ColIndex++;
+                }
+    // should have been a distinguish function,but doesn work if transporting var needed In JS MAYBE {check each 1-9 funcion}
+              counter = 0;
+                for(var i=0;i<9;i++){
+                if(ColToBeTest.indexOf(i+1)>=0){counter++;}
+            }
+            if(counter == 9){ 
+                flag = true;
+            } 
+            else{
+                flag = false;
+                }
+       }              
+        for(var grid_i=0; grid_i<1; grid_i++){
+         var GridToBeTest = new Array;
+          var GridIndex = 0;
+          var GridStart = 1;
+            //check each grid        
+            if( (grid_i == 3) || (grid_i == 6) ){GridStart=4;}
+            else{GridStart = 1;}      
+            var grid_start_i_index = grid_i*3*GridStart;
+            
+            for(var grid_i_each = grid_start_i_index; grid_i_each<grid_start_i_index+21; grid_i_each++){
+              
+                GridToBeTest[GridIndex] = -_NUM[grid_i_each];
+                GridIndex++;
+                if(grid_i_each - grid_start_i_index == 2 || grid_i_each - grid_start_i_index == 5){grid_i_each+=6;}
+                
+                }
+            
+    // should have been a distinguish function,but doesn work if transporting var needed In JS MAYBE {check each 1-9 funcion}
+              counter = 0;
+                for(var i=0;i<9;i++){
+                if(GridToBeTest.indexOf(i+1)>=0){counter++;}
+            }
+            if(counter == 9){ 
+                                 flag = true;
+                            } 
+            else{
+                    flag = false;
+                }                
+                
+                
+                
+                
+     // should have been a distinguish function      
+        
+    }
+    
+    return flag;
+    
+}
